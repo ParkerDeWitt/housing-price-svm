@@ -1,0 +1,18 @@
+#### Support Vector Regressor performance ####
+Mean squared error       = 15.38
+Explained variance score = 0.82
+
+#### Confusion matrix ####
+[[69 10]
+ [ 4 19]]
+
+#### Classification report ####
+                    precision    recall  f1-score   support
+
+ Class-0 (< 25.00)       0.95      0.87      0.91        79
+Class-1 (>= 25.00)       0.66      0.83      0.73        23
+
+          accuracy                           0.86       102
+         macro avg       0.80      0.85      0.82       102
+      weighted avg       0.88      0.86      0.87       102
+
