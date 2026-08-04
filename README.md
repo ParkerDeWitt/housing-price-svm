@@ -1,15 +1,42 @@
-Estimating Housing Prices with a Support Vector Machine
-What this program does
-For this problem I built a Support Vector Machine and used it as a regressor (SVR) to predict Boston house prices from 13 features like crime rate, number of rooms, tax rate, and so on. After training it I checked how good the predictions were using mean squared error and explained variance. Then, like the assignment asked, I turned it into a yes/no classification problem by splitting the prices at 25.00, which let me make a confusion matrix and a classification report to see how well it separates cheaper houses from more expensive ones.
-Implementation
-First I imported everything I needed – numpy, the dataset and preprocessing tools from sklearn, the SVR model, the shuffle function, the metrics (confusion matrix, classification report, mean squared error, explained variance), and matplotlib for the plot.
-Then I loaded the housing data and shuffled it with random_state=7. Shuffling matters because if the data has any kind of order to it, the train/test split could end up biased. Using a fixed random_state just means I get the same result every time I run it, which made it easier to check my work.
-Next I split it 80/20. With 506 samples that comes out to 404 for training and 102 for testing. I just took the first 80% for training and the rest for testing after the shuffle.
-For the model I used SVR with a linear kernel (that part was required). I left C at 1.0 and epsilon at 0.1. The way I understand it, C controls how much the model gets penalized for errors, and epsilon is basically a margin around the prediction where small errors don't count. Then I trained it with .fit() on the training data.
-After training, I ran the model on the test set to get the predicted prices. To see how it did I printed the mean squared error and the explained variance score.
-Then came the binarizing part. I used sklearn's Binarizer with a threshold of 25.00, so any price of 25 or above becomes a 1 and anything below becomes a 0. I did this to both the predicted prices and the actual prices so I could compare them. One thing I want to point out: the assignment says to use the actual values “in the training data,” but for a confusion matrix the predicted labels and actual labels have to be the same length and be the same houses, so I used the actual test prices instead. Otherwise the two lists wouldn't line up and it wouldn't work.
-With the two label lists I made the confusion matrix, plotted it in grayscale (and saved it as an image), and finally printed the classification report.
-How to run it
-run: python M5_Problem1_SVM_Housing.py
-You'll need numpy, scikit-learn, and matplotlib installed (pip install numpy scikit-learn matplotlib).
-Quick note on the data: the project uses datasets.load_boston(), but that function got removed in newer versions of scikit-learn. So in my code I try load_boston() first, and if it's not there it automatically loads the same data from the BostonHousing.csv file I included. That way it runs no matter which version of scikit-learn you have and still gives the numbers above.
+# Housing Price Prediction with Support Vector Regression
+
+## Overview
+
+This project builds a Support Vector Machine, used as a regressor (SVR), to predict housing prices from 13 features such as crime rate, number of rooms, and tax rate. After training, prediction quality is evaluated with mean squared error and explained variance. The regression output is then converted into a binary classification problem by splitting prices at a threshold of 25.00, enabling a confusion matrix and classification report to measure how well the model separates cheaper homes from more expensive ones.
+
+## Tech Stack
+
+Python, NumPy, scikit-learn, Matplotlib
+
+## How It Works
+
+The dataset (506 samples) is shuffled with a fixed random seed for reproducibility and split 80/20 into training and test sets (404 / 102 samples). An SVR model with a linear kernel (`C=1.0`, `epsilon=0.1`) is trained on the training set and evaluated on the test set using mean squared error and explained variance.
+
+To frame the problem as classification, both the predicted and actual test prices are binarized at a threshold of 25.00 (1 = at or above, 0 = below). This produces two aligned label lists — predicted and actual — used to generate a confusion matrix (plotted in grayscale) and a classification report.
+
+**Compatibility fix:** the original assignment used `sklearn.datasets.load_boston()`, which was removed in newer versions of scikit-learn. The script tries `load_boston()` first and automatically falls back to a bundled `BostonHousing.csv` if it's unavailable, so it runs regardless of scikit-learn version.
+
+## Results
+
+```
+Mean squared error       = 15.38
+Explained variance score = 0.82
+
+Confusion matrix:
+[[69 10]
+ [ 4 19]]
+
+                    precision    recall  f1-score   support
+ Class-0 (< 25.00)       0.95      0.87      0.91        79
+Class-1 (>= 25.00)       0.66      0.83      0.73        23
+          accuracy                           0.86       102
+```
+
+The model explains about 82% of the variance in housing prices with a linear kernel. On the classification side, it reaches 86% overall accuracy — very strong at identifying affordable homes (0.95 precision) and reasonably good at catching expensive ones, though it occasionally over-predicts "expensive" (0.66 precision on that class).
+
+## Running It
+
+```
+pip install numpy scikit-learn matplotlib
+python M5_Problem1_SVM_Housing.py
+```
